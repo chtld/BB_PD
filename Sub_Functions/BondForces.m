@@ -11,8 +11,7 @@ BforceZ=zeros(Totalbonds,1);
 
 fail(fail==1 & BondType==0 & Stretch>Critical_ts_conc)=0;     % Deactivate bond if stretch exceeds critical stretch   Failed = 0 
 fail(fail==1 & BondType==1 & Stretch>3*Critical_ts_conc)=0;   % EMU user manual recommends that the critical stretch and bond force are multiplied by a factor of 3 for concrete to steel bonds 
-fail(fail==1 & BondType==2 & Stretch>Critical_ts_steel)=0;
-% Bond remains active = 1
+fail(fail==1 & BondType==2 & Stretch>Critical_ts_steel)=0;    % Bond remains active = 1
 
 % Bond force multiplier
 BFmultiplier(BondType==1)=3;
@@ -26,23 +25,21 @@ BforceY(isnan(BforceY))=0;
 BforceZ(isnan(BforceZ))=0;
 
 % Nodal force (force on node i) - summing for all bonds attached to node i
-
 for i=1:Totalbonds
     
     nodei=bondlist(i,1);
     nodej=bondlist(i,2);
     
-    if nodei==i || nodej==i
-        Nforce(i,1)=Nforce(i,1)+BforceX(i);
-        Nforce(i,2)=Nforce(i,2)+BforceY(i);
-        Nforce(i,3)=Nforce(i,3)+BforceZ(i);
-    end
+    Nforce(nodei,1)=Nforce(nodei,1)+BforceX(i);
+    Nforce(nodej,1)=Nforce(nodej,1)-BforceX(i);
+ 
+    Nforce(nodei,2)=Nforce(nodei,2)+BforceY(i);
+    Nforce(nodej,2)=Nforce(nodej,2)-BforceY(i);
     
+    Nforce(nodei,3)=Nforce(nodei,3)+BforceZ(i);
+    Nforce(nodej,3)=Nforce(nodej,3)-BforceZ(i);
+        
 end
-
-% Nforce(:,1)=sum(BforceX,2);
-% Nforce(:,2)=sum(BforceY,2);
-% Nforce(:,3)=sum(BforceZ,2);
                                           
 % Add body force
 Nforce(:,:)=Nforce(:,:)+(bodyforce(:,:)*Max_Force);

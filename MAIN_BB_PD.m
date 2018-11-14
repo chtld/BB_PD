@@ -41,7 +41,7 @@ Total=toc(start);
 fprintf('Simulation complete in %fs \n', Total)
 
 %% Display results
-[Bond_damage]=Damage(NumFamMembVector,fail,Totalnodes,coordinates,disp);   % Damage - Calculate percentage of broken peridynamic bonds for every node
+[Bond_damage]=Damage(NumFamMembVector,fail,Totalnodes,Totalbonds,coordinates,disp,bondlist);   % Damage - Calculate percentage of broken peridynamic bonds for every node
 Displacement(disp,coordinates,MaterialFlag);                               % Plot deformed shape of object under analysis
 DisplacementVsTime(nt,Displacement_node);                                  % Plot displacement of selected node against time
 %ForceVsDisplacement(Displacement_node,ForceHistory);                      % Plot applied force against time

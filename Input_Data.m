@@ -62,9 +62,9 @@ for i=3:Ndiv_x:(Totalnodes-Ndiv_x+3)
   ConstraintFlag(i,:)=0;
 end
 
-Max_Force=-1.2e8;      % Maximum force per node
-Build_up=0;             % Build load up over defined number of time steps
-damping=2.5e6;           % Damping coefficient
+Max_Force=-1.2e8;           % Maximum force per node
+Build_up=0;                 % Build load up over defined number of time steps
+damping=2.5e6;              % Damping coefficient
 
 % Application of force
 bodyforce=zeros(Totalnodes,Nod);
@@ -117,7 +117,7 @@ Critical_ts_steel=0.01;                     % critical tensile stretch - steel
 
 SF=2;                                                               % Time step safety factor - to reduce time step size
 dt=(0.8*sqrt(2*Dens_concrete*dx/(pi*delta^2*dx*c_concrete)))/SF;    % Minimum stable time step
-nt=10000;                                                           % Number of time steps1
+nt=10000;                                                           % Number of time steps (10,000 for speed testing)
  
 %% Other
 
