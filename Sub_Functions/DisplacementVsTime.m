@@ -7,7 +7,7 @@ function DisplacementVsTime(nt,Displacement_node)
 
 Time(:,1)=1:nt;
 
-figure(4)
+figure;
 plot(Time,-Displacement_node)
 xlabel('Time step') 
 ylabel('Displacement (m)')

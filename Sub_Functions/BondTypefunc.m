@@ -1,10 +1,13 @@
 
+function [c,BondType,BFmultiplier]=BondTypefunc(Totalbonds,bondlist,NumFamMembVector,MaterialFlag,c_concrete,c_steel,NeighbourhoodVolume,Volume)
+
 % Determine the bond type and stiffness connecting node pairs (e.g. is it a concrete or
 % steel bond?)
-function [c,BondType]=BondType(Totalbonds,bondlist,NumFamMembVector,MaterialFlag,c_concrete,c_steel,NeighbourhoodVolume,Volume)
 
-c=zeros(Totalbonds,1);           % Initialise matrix
-BondType=zeros(Totalbonds,1);    % Initialise matrix
+c=zeros(Totalbonds,1);              % Initialise vector
+BondType=zeros(Totalbonds,1);       % Initialise vector
+BFmultiplier=zeros(Totalbonds,1);   % Initialise vector
+
 
 for i=1:Totalbonds
         
@@ -38,5 +41,9 @@ for i=1:Totalbonds
     c(i)=StiffeningFactor*ctemp;                                                                      % Correct the bond stiffness
 
 end
+
+% Bond force multiplier
+BFmultiplier(BondType==1)=3;
+BFmultiplier(BondType==0 | BondType==2)=1;
 
 end

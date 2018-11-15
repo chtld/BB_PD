@@ -1,6 +1,5 @@
-% Calculate volume correction factors for every node - 3D cell volume
-
 function [fac]=VolumeCorrection(Totalbonds,UndeformedLength,delta,radij)
+% Calculate volume correction factors for every node - 3D cell volume
 
 fac=zeros(Totalbonds,1);    % Initialise matrix
 

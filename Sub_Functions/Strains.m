@@ -1,6 +1,6 @@
 function [StrainTensor]=Strains(coordinates,Displacement,NumFamMemb,nodefamily,Totalnodes,familypointer,maxfam,delta)
 %   Returns the stress tensor in each point of a given set using
-%   state base theory with correspondency strategy.
+%   state based theory with correspondency strategy.
 %
 %   [Input] 
 %   The first index of the input arrays corresponds to a particle number.

@@ -1,8 +1,8 @@
+function [fail,disp,Stretch,Displacement_node,ReactionForce,countmin]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt)
+% Time integration using a Forward Difference (FD) Backward Difference (BD)
+% scheme (FD_BD)
 
-% Time integration
-
-function [fail,disp,Stretch,Displacement_node,ReactionForce,countmin]=TimeIntegration(Totalnodes,Totalbonds,bondlist,Nod,countmin,nt,Build_up,Max_Force,NumFamMembVector,nodefamily,nfpointer,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,fac,Volume,damping,dens,dt,ConstraintFlag,bodyforce)
-
+%% Initialise 
 fail=zeros(Totalbonds,1)+1;                      
 Stretch=zeros(Totalbonds,1);
 DeformedLength=zeros(Totalbonds,1);
@@ -22,29 +22,18 @@ Zdeformed=zeros(Totalbonds,1);
 
 tic
 for tt=countmin:nt
-    
-    %% Application of boundary conditions
+  
     countmin=tt+1; % If a checkpoint file is loaded, the simulation needs to start on the next iteration
-%     
-%     % Build load up over defined number of time steps
-%     if (1<=tt) && (tt<=Build_up)
-%         Force=(Max_Force/Build_up)*tt;
-%     elseif tt>Build_up
-%         Force=Max_Force;
-%     end
-     
-    % Application of force
-    % Application of fixed conditions
          
     %% Calculate Bond Forces and perform time integration - Forward Difference and Backward Difference scheme
-    % Calculate bond and nodal forces:-    tt
+        
     Nforce(:,:)=0;  % Nodal force - initialise for every time step
     
     [DeformedLength,Xdeformed,Ydeformed,Zdeformed,Stretch]=DeformedLengthfunc(Totalbonds,bondlist,UndeformedLength,DeformedLength,coordinates,disp,Xdeformed,Ydeformed,Zdeformed);
-    [Nforce,fail]=BondForces(Nforce,Totalbonds,fail,BondType,Stretch,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,DeformedLength,Xdeformed,Ydeformed,Zdeformed,bodyforce,Max_Force,bondlist);
+    [Nforce,fail]=BondForces(Nforce,Totalbonds,fail,BondType,Stretch,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,DeformedLength,Xdeformed,Ydeformed,Zdeformed,bodyforce,Max_Force,bondlist,BFmultiplier);
        
     a(:,:)=(Nforce(:,:)-damping*v(:,:))./dens(:,:);        % Acceleration for time:-   tt
-    a(ConstraintFlag==0)=0;
+    a(ConstraintFlag==0)=0;                                % Apply constraints
     v_forward(:,:)=v(:,:)+(a(:,:)*dt);                     % Velocity for time:-       tt + 1dt
     disp_forward(:,:)=disp(:,:) + (v_forward(:,:)*dt);     % Displacement for time:-   tt + 1dt
     v(:,:)=v_forward(:,:);                                 % Update
@@ -61,16 +50,11 @@ for tt=countmin:nt
 
     %% Save results
     
-    Displacement_node(tt,1)=disp(150,3);         % Displacement
+    Displacement_node(tt,1)=disp(150,3);          % Save displacement of defined node for plot of Displacement vs Time
     % ForceHistory(tt,1)=Force;                   % Force
     NforceTemp=Nforce;
     NforceTemp(ConstraintFlag==1)=0;
     ReactionForce(tt,1)=sum(NforceTemp(:,3)); 
-    
-    if tt==nt
-        Displacement(:,:)=disp;
-        NodalForce(:,:)=Nforce;
-    end
     
     if mod(tt,2500)==0
        save(['D:\PhD\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 2500 time steps

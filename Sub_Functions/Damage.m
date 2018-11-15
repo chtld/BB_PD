@@ -23,7 +23,7 @@ Bond_damage(:,1)=1-(UnbrokenBonds./NumFamMembVector(:,1)); % Calculate percentag
 % Plot data
 DSF=10; % Displacement scale factor
 pointsize=1;
-figure(1)
+figure;
 %subplot(1,2,1)
 scatter3(coordinates(:,1)+(disp(:,1)*DSF),coordinates(:,2)+(disp(:,2)*DSF),coordinates(:,3)+(disp(:,3)*DSF),pointsize,Bond_damage(:,1))
 axis equal
@@ -59,7 +59,7 @@ DispCrossSection(LogicCondition1,:)=[];
 BondDamageCrossSection(LogicCondition1,:)=[];
 
 pointsize=1;
-figure(11)
+figure;
 %subplot(1,2,2)
 scatter(CoordCrossSection(:,1)+(DispCrossSection(:,1,1)*DSF),CoordCrossSection(:,3)+(DispCrossSection(:,3,1)*DSF),pointsize,BondDamageCrossSection(:,1))
 axis equal

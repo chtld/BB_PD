@@ -1,8 +1,6 @@
+function Displacement(disp,coordinates,MaterialFlag)
 % Plot displacement of beam under analysis
 
-function Displacement(disp,coordinates,MaterialFlag)
-
-% Plot displacement
 for i=1:1
     % Seperate scatter data into sub sets - The first set represents concrete nodes
     % and the second set represents steel nodes
@@ -18,7 +16,7 @@ for i=1:1
     DispSteel(LogicCondition2,:)=[];
     CoordSteel(LogicCondition2,:)=[];
     
-    figure(2)
+    figure;
     pause(0.05)
     
     % Displacement scale factor
@@ -43,13 +41,12 @@ for i=1:1
     
     % Plot cross-section of beam
     sz2=100;
-    figure(3)
+    figure;
     scatter(CoordConcrete(:,2),CoordConcrete(:,3),sz2,'b','filled');
     hold on
     scatter(CoordSteel(:,2),CoordSteel(:,3),sz2,'g','filled')
     hold off
-    
-    
+        
 end
 
 end 

@@ -1,10 +1,9 @@
-% Determination of material points inside the horizon of each material
-% point
+function [nodefamily,nfpointer,UndeformedLength,NumFamMembVector,bondlist,Totalbonds]=BuildHorizons(Totalnodes,coordinates,delta)
 
-function [nodefamily,nfpointer,UndeformedLength,NumFamMembVector,MaxNumFamMemb,bondlist,Totalbonds]=BuildHorizons(Totalnodes,coordinates,delta)
+% Determine the nodes inside the horizon of each material point, build bond lists, and determine undeformed length of every bond
 
 %% KD-tree
-[NF,UL]=rangesearch(coordinates,coordinates,delta); % rangesearch is the KDTreeSearcher function for distance search.
+[NF]=rangesearch(coordinates,coordinates,delta); % rangesearch is the KDTreeSearcher function for distance search.
 
 
 %% Create node family data structure
@@ -33,30 +32,10 @@ for i=1:Totalnodes
     
 end
 
-%% Calculate undeformed length of every bond
-
-MaxNumFamMemb=max(NumFamMembVector);               % Maximum number of family members
-% UndeformedLength=zeros(Totalnodes,MaxNumFamMemb);  % Initialise matrix
-
-for i=1:Totalnodes
-    
-    CurrentUndeformedLengthTemp=UL{i};
-    CurrentUndeformedLengthTemp(1)=[];
-    CurrentUndeformedLength=CurrentUndeformedLengthTemp;
-    NumFamMemb=size(CurrentUndeformedLength,2);
-   
-%     for j=1:NumFamMemb
-%         UndeformedLength(i,j)=CurrentUndeformedLength(1,j);
-%     end
-
-end
-
 %% Create bond list
 
 bondlist=zeros(size(nodefamily,1)/2,2);
-% bondfamily=zeros(size(nodefamily,1),1);
 counter1=0;
-% counter2=0;
 
 for i=1:Totalnodes
     % All nodes within Node 'i' sphere of influence
@@ -67,14 +46,12 @@ for i=1:Totalnodes
            counter1=counter1+1;
            bondlist(counter1,:)=[i cnode]; 
         end
-%         counter2=counter2+1;
-%         bondfamily(counter2,1)=find(bondlist(:,1)==i & bondlist(:,2)==cnode |  bondlist(:,1)==cnode & bondlist(:,2)==i);
     end
 end
 
 Totalbonds=counter1;
 
-
+%% Calculate undeformed length of every bond
 
 UndeformedLength=zeros(Totalbonds,1);
 
