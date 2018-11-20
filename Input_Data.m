@@ -29,10 +29,10 @@ MaterialFlag=zeros(Totalnodes,1);       % Create flag to identify steel and conc
 %    MaterialFlag(i,1)=1; 
 % end
 for i=((Ndiv_x*378)+1):(Ndiv_x*380)
-   MaterialFlag(i,1)=1; 
+   MaterialFlag(i,1)=0; 
 end
 for i=((Ndiv_x*393)+1):(Ndiv_x*395)
-   MaterialFlag(i,1)=1; 
+   MaterialFlag(i,1)=0; 
 end
 
 % Bar 2
@@ -40,10 +40,10 @@ end
 %    MaterialFlag(i,1)=1; 
 % end
 for i=((Ndiv_x*385)+1):(Ndiv_x*387)
-   MaterialFlag(i,1)=1; 
+   MaterialFlag(i,1)=0; 
 end
 for i=((Ndiv_x*400)+1):(Ndiv_x*402)
-   MaterialFlag(i,1)=1; 
+   MaterialFlag(i,1)=0; 
 end
 
 %% Define loading plates, supports, constraints, loads (boundary conditions)

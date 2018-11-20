@@ -30,6 +30,7 @@ tic
 [c,BondType,BFmultiplier]=BondTypefunc(Totalbonds,bondlist,NumFamMembVector,MaterialFlag,c_concrete,c_steel,NeighbourhoodVolume,Volume);
 BondTypeandStiffness=toc;
 fprintf('Bond type and stiffness complete in %fs \n', BondTypeandStiffness)
+
 %% Time integration
 tic
 [fail,disp,Stretch,Displacement_node,ReactionForce,countmin]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt);
@@ -45,12 +46,12 @@ fprintf('Simulation complete in %fs \n', Total)
 Displacement(disp,coordinates,MaterialFlag);                                                   % Plot deformed shape of object under analysis
 DisplacementVsTime(nt,Displacement_node);                                                      % Plot displacement of selected node against time
 %ForceVsDisplacement(Displacement_node,ForceHistory);                                          % Plot applied force against time
-StretchDisplay(Totalnodes,Stretch,Totalbonds,bondlist,coordinates,disp);                       % Plot stretch of every bond
+%StretchDisplay(Totalnodes,Stretch,Totalbonds,bondlist,coordinates,disp);                       % Plot stretch of every bond
 ReactionForceVsDisplacement(ReactionForce,Displacement_node);                                  % Plot reaction force against displacement
 
 %% Stress and Strain
-%[StrainTensor]=Strains(coordinates,Displacement,NumFamMemb,nodefamily,Totalnodes,familypointer,maxfam,delta);
-%[SressTensor]=Stress(Totalnodes,Nod,EffectiveModulusConcrete,EffectiveModulusSteel,v_concrete,v_steel,G_concrete,G_steel,coordinates,Displacement,StrainTensor,MaterialFlag);
+[StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMembVector,nodefamily,nfpointer);
+[StressTensor]=Stress(Totalnodes,Nod,EffectiveModulusConcrete,EffectiveModulusSteel,v_concrete,v_steel,G_concrete,G_steel,coordinates,disp,StrainTensor,MaterialFlag);
 
 %% Output simulation data
 
