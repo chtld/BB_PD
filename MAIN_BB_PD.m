@@ -51,7 +51,7 @@ ReactionForceVsDisplacement(ReactionForce,Displacement_node);                   
 
 %% Stress and Strain
 [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMembVector,nodefamily,nfpointer);
-[StressTensor]=Stress(Totalnodes,Nod,EffectiveModulusConcrete,EffectiveModulusSteel,v_concrete,v_steel,G_concrete,G_steel,coordinates,disp,StrainTensor,MaterialFlag);
+[StressTensor]=Stressfunc(Totalnodes,Nod,EffectiveModulusConcrete,EffectiveModulusSteel,v_concrete,v_steel,G_concrete,G_steel,coordinates,disp,StrainTensor,MaterialFlag);
 
 %% Output simulation data
 

@@ -56,13 +56,10 @@ for tt=countmin:nt
     NforceTemp(ConstraintFlag==1)=0;
     ReactionForce(tt,1)=sum(NforceTemp(:,3)); 
     
-%     if mod(tt,1000)==0
-%         [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist);
-%     end
-    
-%     if mod(tt,2500)==0
-%        save(['D:\PhD\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 2500 time steps
-%     end
+      
+    if mod(tt,500)==0
+       save(['D:\PhD\2 Code\BB_PD\Output\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 500 time steps
+    end
     
 end
 

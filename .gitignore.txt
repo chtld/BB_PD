@@ -1,2 +1,2 @@
-# Ignore files in Testing foler
-Testing/
+# Ignore files in Testing folder
+/Testing
