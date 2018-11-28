@@ -1,6 +1,5 @@
-function [fail,disp,Stretch,Displacement_node,ReactionForce,countmin]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt)
-% Time integration using a Forward Difference (FD) Backward Difference (BD)
-% scheme (FD_BD)
+function [fail,disp,Stretch,Displacement_node,ReactionForce,countmin,StressHistory]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt,NumFamMembVector,nodefamily,nfpointer,MaterialProperties,MaterialFlag)
+% Time integration using a Forward Difference (FD) Backward Difference (BD) scheme (FD_BD)
 
 %% Initialise 
 fail=zeros(Totalbonds,1)+1;                      
@@ -12,7 +11,7 @@ disp_forward=zeros(Totalnodes,Nod);
 v=zeros(Totalnodes,Nod);                            % Velocity of a material point
 v_forward=zeros(Totalnodes,Nod);
 a=zeros(Totalnodes,Nod);                            % Acceleration of a material point
-Displacement_node=zeros(nt,1);                      % History of displacement at selected node
+%Displacement_node=zeros(nt,1);                      % History of displacement at selected node
 ForceHistory=zeros(nt,1);                           % History of applied force
 ReactionForce=zeros(nt,1);                          
 
@@ -21,6 +20,8 @@ Ydeformed=zeros(Totalbonds,1);
 Zdeformed=zeros(Totalbonds,1);
 
 tic
+
+counter=0;
 for tt=countmin:nt
   
     countmin=tt+1; % If a checkpoint file is loaded, the simulation needs to start on the next iteration
@@ -42,6 +43,9 @@ for tt=countmin:nt
     % Calculating the percentage of progress of time integration
     perc_progress=(tt/nt)*100;
     fprintf('Completed %.3f%% of time integration \n', perc_progress)
+    
+    
+
 %     if perc_progress==1
 %         onepercent=toc;
 %         fprintf('1 percent of time integration complete in %fs \n', onepercent)
@@ -50,16 +54,26 @@ for tt=countmin:nt
 
     %% Save results
     
-    Displacement_node(tt,1)=disp(150,3);          % Save displacement of defined node for plot of Displacement vs Time
+    
+%     if mod(tt,1)==0
+%         counter=counter+1;
+%         Displacement_node(counter,1)=disp(66321,3);          % Save displacement of defined node for plot of Displacement vs Time
+% 
+%         [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMembVector,nodefamily,nfpointer);
+%         [StressTensor]=Stressfunc(Totalnodes,Nod,MaterialProperties,coordinates,disp,StrainTensor,MaterialFlag);
+% 
+%         StressHistory(counter,1)=StressTensor(66321,1,1);
+%     end
+%     
+    
     % ForceHistory(tt,1)=Force;                   % Force
     NforceTemp=Nforce;
     NforceTemp(ConstraintFlag==1)=0;
     ReactionForce(tt,1)=sum(NforceTemp(:,3)); 
-    
-      
-    if mod(tt,500)==0
-       save(['D:\PhD\2 Code\BB_PD\Output\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 500 time steps
-    end
+
+%     if mod(tt,2500)==0
+%        save(['D:\PhD\2 Code\BB_PD\Output\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 2500 time steps
+%     end
     
 end
 

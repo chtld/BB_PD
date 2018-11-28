@@ -33,10 +33,9 @@ fprintf('Bond type and stiffness complete in %fs \n', BondTypeandStiffness)
 
 %% Time integration
 tic
-[fail,disp,Stretch,Displacement_node,ReactionForce,countmin]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt);
+[fail,disp,Stretch,Displacement_node,ReactionForce,countmin,StressHistory]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt,NumFamMembVector,nodefamily,nfpointer,MaterialProperties,MaterialFlag);
 TimeIntegrationTimer=toc;
 fprintf('Time integration complete in %fs \n', TimeIntegrationTimer)
-
 %% Simulation timing
 Total=toc(start); 
 fprintf('Simulation complete in %fs \n', Total)
@@ -50,8 +49,8 @@ DisplacementVsTime(nt,Displacement_node);                                       
 ReactionForceVsDisplacement(ReactionForce,Displacement_node);                                  % Plot reaction force against displacement
 
 %% Stress and Strain
-[StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMembVector,nodefamily,nfpointer);
-[StressTensor]=Stressfunc(Totalnodes,Nod,EffectiveModulusConcrete,EffectiveModulusSteel,v_concrete,v_steel,G_concrete,G_steel,coordinates,disp,StrainTensor,MaterialFlag);
+% [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMembVector,nodefamily,nfpointer);
+% [StressTensor]=Stressfunc(Totalnodes,Nod,MaterialProperties,coordinates,disp,StrainTensor,MaterialFlag);
 
 %% Output simulation data
 

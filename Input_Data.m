@@ -74,31 +74,31 @@ end
 
   
 
-%% Material properties, and peridynamic paramaters
+%% Material properties, and peridynamic parameters
 
-E_concrete=22e9;                                % Young's modulus
-E_steel=200e9;                                  % Young's modulus
+MaterialProperties.E_concrete=22e9;                                % Young's modulus
+MaterialProperties.E_steel=200e9;                                  % Young's modulus
 
-v_concrete=0.2;                                 % Poisson's ratio
-v_steel=0.3;                                    % Poisson's ratio
+MaterialProperties.v_concrete=0.2;                                 % Poisson's ratio
+MaterialProperties.v_steel=0.3;                                    % Poisson's ratio
 
-G_concrete=8.8e9;                               % Shear modulus
-G_steel=78e9;                                   % Shear modulus
+MaterialProperties.G_concrete=8.8e9;                               % Shear modulus
+MaterialProperties.G_steel=78e9;                                   % Shear modulus
                                                    
-EffectiveModulusConcrete = E_concrete/((1-2*v_concrete)*(1+v_concrete));
-EffectiveModulusSteel = E_steel/((1-2*v_steel)*(1+v_steel));
+MaterialProperties.EffectiveModulusConcrete = MaterialProperties.E_concrete/((1-2*MaterialProperties.v_concrete)*(1+MaterialProperties.v_concrete));
+MaterialProperties.EffectiveModulusSteel = MaterialProperties.E_steel/((1-2*MaterialProperties.v_steel)*(1+MaterialProperties.v_steel));
 
-Dens_concrete=2400;            % Density concrete (kg/m^3)
-Dens_steel=8000;               % Density steel (kg/m^3)
+MaterialProperties.Dens_concrete=2400;            % Density concrete (kg/m^3)
+MaterialProperties.Dens_steel=8000;               % Density steel (kg/m^3)
 
 dens=zeros(Totalnodes,1);
 for i=1:Totalnodes
     if MaterialFlag(i,1)==0
     % Concrete
-    dens(i,1)=Dens_concrete;
+    dens(i,1)=MaterialProperties.Dens_concrete;
     elseif MaterialFlag(i,1)==1
     % Steel
-    dens(i,1)=Dens_steel;        
+    dens(i,1)=MaterialProperties.Dens_steel;        
     end
 end
 
@@ -107,8 +107,8 @@ NeighbourhoodVolume=(4*pi*delta^3)/3;       % Neighbourhood area/volume for node
 Volume=dx^3;                                % Cell volume/area
 radij=dx/2;                                 % Material point radius
 
-c_concrete=(12*E_concrete)/(pi*delta^4);        % Bond stiffness
-c_steel=(12*E_steel)/(pi*delta^4);              % Bond stiffness  
+c_concrete=(12*MaterialProperties.E_concrete)/(pi*delta^4);        % Bond stiffness
+c_steel=(12*MaterialProperties.E_steel)/(pi*delta^4);              % Bond stiffness  
 
 Critical_ts_conc=0.000533;                  % Critical tensile stretch - concrete
 Critical_ts_steel=0.01;                     % critical tensile stretch - steel   
@@ -116,8 +116,8 @@ Critical_ts_steel=0.01;                     % critical tensile stretch - steel
 %% Time Step - Look in first year report and implement defined procedure 
 
 SF=2;                                                               % Time step safety factor - to reduce time step size
-dt=(0.8*sqrt(2*Dens_concrete*dx/(pi*delta^2*dx*c_concrete)))/SF;    % Minimum stable time step
-nt=10000;                                                           % Number of time steps (10,000 for speed testing)
+dt=(0.8*sqrt(2*MaterialProperties.Dens_concrete*dx/(pi*delta^2*dx*c_concrete)))/SF;    % Minimum stable time step
+nt=5000;                                                           % Number of time steps (10,000 for speed testing)
  
 %% Other
 

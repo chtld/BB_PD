@@ -50,8 +50,10 @@ function [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMe
    
 %% Node lists
 
-    % loop all the points
-    for i=1:nPts
+    
+%     for i=1:nPts   % loop all the points
+        
+        i=66321;   % Only consider single point
         
         % loop all the points within the family of k
         XX = zeros(nDim); % tensor product X * X
@@ -87,7 +89,7 @@ function [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMe
             StrainTensor(i,:,:) = 0.5 * (F + F') - I;
         end
         
-    end
+%     end
     
  %% Bond lists
  
@@ -137,19 +139,15 @@ function [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMe
 
 %% Plot results 
 
-showme=zeros(nPts,1);
-for i=1:nPts
-    showme(i)=StrainTensor(i,1,1);
-end
 
 % Strain Plot
-pointsize=1;
-figure;
-scatter3(coordinates(:,1)+(disp(:,1,1)*10),coordinates(:,2)+(disp(:,2,1)*10),coordinates(:,3)+(disp(:,3,1)*10),pointsize,StrainTensor(:,1,1))
-title('Strain')
-axis equal
-colormap jet 
-colorbar
+% pointsize=1;
+% figure;
+% scatter3(coordinates(:,1)+(disp(:,1,1)*10),coordinates(:,2)+(disp(:,2,1)*10),coordinates(:,3)+(disp(:,3,1)*10),pointsize,StrainTensor(:,1,1))
+% title('Strain')
+% axis equal
+% colormap jet 
+% colorbar
 
     
 end

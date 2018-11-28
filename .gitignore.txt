@@ -1,2 +1,3 @@
 # Ignore files in Testing folder
-/Testing
+Testing/
+Output/
