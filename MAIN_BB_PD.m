@@ -1,6 +1,6 @@
 % MAIN file for Bond Based Peridynamic Analysis (BB_PD) code using bond lists
 
-clear all
+clear variables
 close all
 clc
 

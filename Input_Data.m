@@ -1,4 +1,4 @@
-Simu% Input Data for BB_PD analysis code
+% Input Data for BB_PD analysis code
 
 %% Geometry
 
