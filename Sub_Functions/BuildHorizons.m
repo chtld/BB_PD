@@ -1,6 +1,10 @@
-function [nodefamily,nfpointer,UndeformedLength,NumFamMembVector,bondlist,Totalbonds]=BuildHorizons(Totalnodes,coordinates,delta)
-
+function [Nodes,Bonds]=BuildHorizons(Nodes,PDparameters)
 % Determine the nodes inside the horizon of each material point, build bond lists, and determine undeformed length of every bond
+
+%% Unpack structured array data
+Totalnodes=Nodes.Totalnodes;
+coordinates=Nodes.coordinates;
+delta=PDparameters.delta;
 
 %% KD-tree
 [NF]=rangesearch(coordinates,coordinates,delta); % rangesearch is the KDTreeSearcher function for distance search.
@@ -62,5 +66,14 @@ for i=1:size(bondlist,1)
 end
 
 UndeformedLength=sqrt(UndeformedLength);
+
+%% Pack data into structured array
+
+Nodes.nodefamily=nodefamily;
+Nodes.nfpointer=nfpointer;
+Nodes.NumFamMembVector=NumFamMembVector;
+Bonds.UndeformedLength=UndeformedLength;
+Bonds.bondlist=bondlist;
+Bonds.Totalbonds=Totalbonds;
 
 end

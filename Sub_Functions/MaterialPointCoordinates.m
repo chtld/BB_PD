@@ -1,13 +1,23 @@
-% Specification of material point coordinates for equiangular
-% quadrilaterals (squares and rectangles)
 
-function [coordinates]=MaterialPointCoordinates(Totalnodes,Nod,Ndiv_y,Ndiv_x,Ndiv_z,dx,dy,dz)
+function [coordinates]=MaterialPointCoordinates(Geometry,Discretisation,Nodes)
 
+% Specification of material point coordinates for equiangular quadrilaterals (squares and rectangles)
+
+%% Unpack Structured Arrays
+Totalnodes=Nodes.Totalnodes;
+Nod=Geometry.Nod;
+Ndiv_x=Discretisation.Ndiv_x;
+Ndiv_y=Discretisation.Ndiv_y;
+Ndiv_z=Discretisation.Ndiv_z;
+dx=Discretisation.dx;
+dy=Discretisation.dy;
+dz=Discretisation.dz;
+
+
+%% Main body of function
 coordinates=zeros(Totalnodes,Nod); % Initialise coordinates
+nnum=0;                            % Counter
 
-nnum=0;
-
-% Main Body
 for j3=1:Ndiv_z
     for j2=1:Ndiv_y
         for j1=1:Ndiv_x

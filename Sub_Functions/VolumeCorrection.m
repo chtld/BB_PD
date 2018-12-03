@@ -1,5 +1,13 @@
-function [fac]=VolumeCorrection(Totalbonds,UndeformedLength,delta,radij)
+function [Nodes]=VolumeCorrection(Bonds,PDparameters,Discretisation,Nodes)
 % Calculate volume correction factors for every node - 3D cell volume
+
+%% Unpack structured array data
+Totalbonds=Bonds.Totalbonds;
+UndeformedLength=Bonds.UndeformedLength;
+delta=PDparameters.delta;
+radij=Discretisation.radij;
+
+%% Main body of volume correction function
 
 fac=zeros(Totalbonds,1);    % Initialise matrix
 
@@ -16,5 +24,8 @@ for i=1:Totalbonds
     end
  
 end
+
+%% Pack data into structured arrays
+Nodes.fac=fac;
 
 end

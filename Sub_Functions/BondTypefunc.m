@@ -1,12 +1,24 @@
 
-function [c,BondType,BFmultiplier]=BondTypefunc(Totalbonds,bondlist,NumFamMembVector,MaterialFlag,c_concrete,c_steel,NeighbourhoodVolume,Volume)
+function [Bonds]=BondTypefunc(Bonds,Nodes,Discretisation,PDparameters)
 
 % Determine the bond type and stiffness connecting node pairs (e.g. is it a concrete or
 % steel bond?)
 
-c=zeros(Totalbonds,1);              % Initialise vector
-BondType=zeros(Totalbonds,1);       % Initialise vector
-BFmultiplier=zeros(Totalbonds,1);   % Initialise vector
+%% Unpack structured array data
+Totalbonds=Bonds.Totalbonds;
+bondlist=Bonds.bondlist;
+NumFamMembVector=Nodes.NumFamMembVector;
+MaterialFlag=Nodes.MaterialFlag;
+c_concrete=PDparameters.c_concrete;
+c_steel=PDparameters.c_steel;
+Volume=Discretisation.Volume;
+NeighbourhoodVolume=PDparameters.NeighbourhoodVolume;
+
+%% Main body of BondTypefunc
+
+c=zeros(Totalbonds,1);              % Initialise bond stiffness vector
+BondType=zeros(Totalbonds,1);       % Initialise bond type vector
+BFmultiplier=zeros(Totalbonds,1);   % Initialise bond force multiplier vector
 
 
 for i=1:Totalbonds
@@ -46,4 +58,8 @@ end
 BFmultiplier(BondType==1)=3;
 BFmultiplier(BondType==0 | BondType==2)=1;
 
+%% Pack data into structured array
+Bonds.c=c;
+Bonds.BondType=BondType;
+Bonds.BFmultiplier=BFmultiplier;
 end

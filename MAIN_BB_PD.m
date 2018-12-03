@@ -15,27 +15,28 @@ fprintf('Input data complete in %fs \n', Input_Data_time)
 
 %% Determine the nodes inside the horizon of each material point, build bond lists, and determine undeformed length of every bond
 tic
-[nodefamily,nfpointer,UndeformedLength,NumFamMembVector,bondlist,Totalbonds]=BuildHorizons(Totalnodes,coordinates,delta);
+[Nodes,Bonds]=BuildHorizons(Nodes,PDparameters);
 Horizons=toc;
 fprintf('Horizons complete in %fs \n', Horizons)
 
 %% Calculate volume correction factors
 tic
-[fac]=VolumeCorrection(Totalbonds,UndeformedLength,delta,radij);
+[Nodes]=VolumeCorrection(Bonds,PDparameters,Discretisation,Nodes);
 VolumeCorrection=toc;
 fprintf('Volume correction factors complete in %fs \n', VolumeCorrection)
 
 %% Calculate bond type and bond stiffness (plus stiffness corrections)
 tic
-[c,BondType,BFmultiplier]=BondTypefunc(Totalbonds,bondlist,NumFamMembVector,MaterialFlag,c_concrete,c_steel,NeighbourhoodVolume,Volume);
+[Bonds]=BondTypefunc(Bonds,Nodes,Discretisation,PDparameters);
 BondTypeandStiffness=toc;
 fprintf('Bond type and stiffness complete in %fs \n', BondTypeandStiffness)
 
 %% Time integration
 tic
-[fail,disp,Stretch,Displacement_node,ReactionForce,countmin,StressHistory]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt,NumFamMembVector,nodefamily,nfpointer,MaterialProperties,MaterialFlag);
+[fail,disp,Stretch,Displacement_node,ReactionForce,countmin,StressHistory]=TimeIntegration(Bonds,Nodes,PDparameters,Discretisation,Geometry,SimParameters,MaterialProperties);
 TimeIntegrationTimer=toc;
 fprintf('Time integration complete in %fs \n', TimeIntegrationTimer)
+
 %% Simulation timing
 Total=toc(start); 
 fprintf('Simulation complete in %fs \n', Total)

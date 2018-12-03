@@ -1,5 +1,34 @@
-function [fail,disp,Stretch,Displacement_node,ReactionForce,countmin,StressHistory]=TimeIntegration(Totalbonds,Totalnodes,Nod,nt,countmin,bondlist,UndeformedLength,coordinates,BondType,Critical_ts_conc,Critical_ts_steel,c,Volume,fac,bodyforce,Max_Force,BFmultiplier,damping,dens,ConstraintFlag,dt,NumFamMembVector,nodefamily,nfpointer,MaterialProperties,MaterialFlag)
+function [fail,disp,Stretch,Displacement_node,ReactionForce,countmin,StressHistory]=TimeIntegration(Bonds,Nodes,PDparameters,Discretisation,Geometry,SimParameters,MaterialProperties)
 % Time integration using a Forward Difference (FD) Backward Difference (BD) scheme (FD_BD)
+
+%% Unpack structured array data
+Totalbonds=Bonds.Totalbonds;
+bondlist=Bonds.bondlist;
+UndeformedLength=Bonds.UndeformedLength;
+BondType=Bonds.BondType;
+c=Bonds.c;
+BFmultiplier=Bonds.BFmultiplier;
+
+Totalnodes=Nodes.Totalnodes;
+coordinates=Nodes.coordinates;
+fac=Nodes.fac;
+bodyforce=Nodes.bodyforce;
+dens=Nodes.dens;
+MaterialFlag=Nodes.MaterialFlag;
+ConstraintFlag=Nodes.ConstraintFlag;
+
+Critical_ts_conc=PDparameters.Critical_ts_conc;
+Critical_ts_steel=PDparameters.Critical_ts_steel;
+
+Volume=Discretisation.Volume;
+
+Nod=Geometry.Nod;
+
+nt=SimParameters.nt;
+countmin=SimParameters.countmin;
+Max_Force=SimParameters.Max_Force;
+damping=SimParameters.damping;
+dt=SimParameters.dt;
 
 %% Initialise 
 fail=zeros(Totalbonds,1)+1;                      
@@ -14,14 +43,14 @@ a=zeros(Totalnodes,Nod);                            % Acceleration of a material
 %Displacement_node=zeros(nt,1);                      % History of displacement at selected node
 ForceHistory=zeros(nt,1);                           % History of applied force
 ReactionForce=zeros(nt,1);                          
-
 Xdeformed=zeros(Totalbonds,1);
 Ydeformed=zeros(Totalbonds,1);
 Zdeformed=zeros(Totalbonds,1);
 
+%% Main body of TimeIntergation
 tic
-
 counter=0;
+
 for tt=countmin:nt
   
     countmin=tt+1; % If a checkpoint file is loaded, the simulation needs to start on the next iteration
@@ -44,13 +73,11 @@ for tt=countmin:nt
     perc_progress=(tt/nt)*100;
     fprintf('Completed %.3f%% of time integration \n', perc_progress)
     
-    
-
-%     if perc_progress==1
-%         onepercent=toc;
-%         fprintf('1 percent of time integration complete in %fs \n', onepercent)
-%         pause
-%     end
+    if perc_progress==1
+        onepercent=toc;
+        fprintf('1 percent of time integration complete in %fs \n', onepercent)
+        pause
+    end
 
     %% Save results
     
@@ -76,5 +103,14 @@ for tt=countmin:nt
 %     end
     
 end
+
+%% Pack data into structured array
+% fail
+% disp
+% Stretch
+% Displacement_node
+% ReactionForce
+% countmin
+% StressHistory
 
 end
