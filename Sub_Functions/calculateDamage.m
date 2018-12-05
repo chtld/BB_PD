@@ -1,11 +1,13 @@
 
-function [Bond_damage]=Damage(NumFamMembVector,fail,Totalnodes,Totalbonds,coordinates,disp,bondlist)
+function [Bond_damage]=calculateDamage(NumFamMembVector,fail,TOTALNODES,coordinates,disp,bondlist)
 
 % Damage - Calculate the damage (percentage of bonds broken) for every node
 
 % Initialise
-Bond_damage=zeros(Totalnodes,1);
-UnbrokenBonds=zeros(Totalnodes,1);
+Bond_damage=zeros(TOTALNODES,1);
+UnbrokenBonds=zeros(TOTALNODES,1);
+
+Totalbonds=size(bondlist,1);
 
 for i=1:Totalbonds
     
@@ -42,9 +44,9 @@ ylabel(h, 'Damage')
 
 % Plot cross section of data
 % Seperate scatter data into sub sets
-CrossSectionFlag=zeros(Totalnodes,1);
+CrossSectionFlag=zeros(TOTALNODES,1);
 
-for i=1:Totalnodes
+for i=1:TOTALNODES
     if coordinates(i,2)==(1/150)*4
         CrossSectionFlag(i,1)=1; % Identify nodes located in cross-section
     end        

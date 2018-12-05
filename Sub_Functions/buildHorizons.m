@@ -1,18 +1,17 @@
-function [Nodes,Bonds]=BuildHorizons(Nodes,PDparameters)
+function [nodefamily,nfpointer,NumFamMembVector,UndeformedLength,bondlist]=buildHorizons(coordinates)
 % Determine the nodes inside the horizon of each material point, build bond lists, and determine undeformed length of every bond
 
-%% Unpack structured array data
-Totalnodes=Nodes.Totalnodes;
-coordinates=Nodes.coordinates;
-delta=PDparameters.delta;
+%% Constants
+dataPDparameters
+TOTALNODES=size(coordinates,1);
 
 %% KD-tree
-[NF]=rangesearch(coordinates,coordinates,delta); % rangesearch is the KDTreeSearcher function for distance search.
+[NF]=rangesearch(coordinates,coordinates,DELTA); % rangesearch is the KDTreeSearcher function for distance search.
 
 
 %% Create node family data structure
 counter=1;
-for i=1:Totalnodes
+for i=1:TOTALNODES
     
     CurrentNodeFamilyTemp=NF{i}; % First element indicates the origin node
     CurrentNodeFamilyTemp(1)=[]; % Remove first element (origin node)
@@ -41,7 +40,7 @@ end
 bondlist=zeros(size(nodefamily,1)/2,2);
 counter1=0;
 
-for i=1:Totalnodes
+for i=1:TOTALNODES
     % All nodes within Node 'i' sphere of influence
     for j=1:NumFamMembVector(i)
         % Consider bond between Node 'i' and Node 'cnode' 
@@ -66,14 +65,5 @@ for i=1:size(bondlist,1)
 end
 
 UndeformedLength=sqrt(UndeformedLength);
-
-%% Pack data into structured array
-
-Nodes.nodefamily=nodefamily;
-Nodes.nfpointer=nfpointer;
-Nodes.NumFamMembVector=NumFamMembVector;
-Bonds.UndeformedLength=UndeformedLength;
-Bonds.bondlist=bondlist;
-Bonds.Totalbonds=Totalbonds;
 
 end

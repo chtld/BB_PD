@@ -1,9 +1,9 @@
-function [DeformedLength,Xdeformed,Ydeformed,Zdeformed,Stretch]=DeformedLengthfunc(Totalbonds,bondlist,UndeformedLength,DeformedLength,coordinates,disp,Xdeformed,Ydeformed,Zdeformed)
+function [DeformedLength,Xdeformed,Ydeformed,Zdeformed,Stretch]=DeformedLengthfunc(TOTALBONDS,bondlist,UndeformedLength,DeformedLength,coordinates,disp,Xdeformed,Ydeformed,Zdeformed)
 
 % Calculate the deformed length of a bond using a nested for loop
 DisplacedCoordinates=coordinates+disp;
 
-for i=1:Totalbonds                           
+for i=1:TOTALBONDS                           
     
    nodei=bondlist(i,1);
    nodej=bondlist(i,2);
