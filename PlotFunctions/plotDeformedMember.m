@@ -1,4 +1,4 @@
-function Displacement(disp,coordinates,MaterialFlag)
+function plotDeformedMember(disp,coordinates,MATERIALFLAG)
 % Plot displacement of beam under analysis
 
 for i=1:1
@@ -6,13 +6,13 @@ for i=1:1
     % and the second set represents steel nodes
     DispConcrete=disp(:,:,i);
     CoordConcrete=coordinates(:,:);
-    LogicCondition1 = MaterialFlag(:,1)==1; % If node is steel, delete from concrete sub set
+    LogicCondition1 = MATERIALFLAG(:,1)==1; % If node is steel, delete from concrete sub set
     DispConcrete(LogicCondition1,:)=[];
     CoordConcrete(LogicCondition1,:)=[];
     
     DispSteel=disp(:,:,i);
     CoordSteel=coordinates(:,:);
-    LogicCondition2 = MaterialFlag(:,1)==0; % If node is concrete, delete from steel sub set
+    LogicCondition2 = MATERIALFLAG(:,1)==0; % If node is concrete, delete from steel sub set
     DispSteel(LogicCondition2,:)=[];
     CoordSteel(LogicCondition2,:)=[];
     

@@ -1,4 +1,4 @@
-function [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMembVector,nodefamily,nfpointer)
+function [straintensor]=calculateStrain(coordinates,disp,NumFamMembVector,nodefamily,nfpointer)
 %   Returns the strain tensor in each point of a given set using
 %   state based theory with correspondency strategy.
 %
@@ -26,72 +26,58 @@ function [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMe
 %   SA Silling, M Epton, O Weckner, J Xu, E Askari
 %   Journal of Elasticity 88 (2), 151-184
     
-    matX=coordinates;
-    matY=coordinates+disp;
-    
-    nPts = size(matX,1); % number of particles
-    nDim = size(matX,2); % number of dimensions
-    
-    %nodefamilyreshaped=reshape(nodefamily,[Totalnodes,maxfam]);
-    
-%% some verifications, eliminate if not necessary
-%     if nPts~=size(matY,1) || nPts~=size(matY,2)
-%        error('Error using getStressState, mismatch between dimensions of matX and matY '); 
-%     end
-%     if  nPts~=size(matFamilies,1)  ||  nPts~=size(vecNFamily,1)
-%        error('Error using getStressState, dimension mismatch of the inputs'); 
-%     end
-  
+matX=coordinates;       % matX contains the initial coordinates of a particle
+matY=coordinates+disp;  % matY contains the deformed coordinates of a particle
 
-    StrainTensor = zeros(nPts, nDim, nDim);
-    XX = zeros(nPts, nDim, nDim);
-    YX = zeros(nPts, nDim, nDim);
-    I = eye(nDim); % identity matrix
+nPts = size(matX,1); % number of particles
+nDim = size(matX,2); % number of dimensions
+  
+straintensor = zeros(nPts, nDim, nDim);
+XX = zeros(nPts, nDim, nDim);
+YX = zeros(nPts, nDim, nDim);
+I = eye(nDim); % identity matrix
    
 %% Node lists
 
-    
-%     for i=1:nPts   % loop all the points
+for nodei=1:nPts % loop all particles
         
-        i=66321;   % Only consider single point
+    % loop all the points within the family of node i
+    XX = zeros(nDim); % tensor product X * X
+    YX = zeros(nDim); % tensor product Y * Y
+
+    for j=1:NumFamMembVector(nodei)
         
-        % loop all the points within the family of k
-        XX = zeros(nDim); % tensor product X * X
-        YX = zeros(nDim); % tensor product Y * Y
+        nodej=nodefamily(nfpointer(nodei)+(j-1),1);
+        X = matX(nodej,:) - matX(nodei,:);
+        Y = matY(nodej,:) - matY(nodei,:);
         
-        for j=1:NumFamMembVector(i)
-            % j = nodefamilyreshaped(k,i);
-            nodej=nodefamily(nfpointer(i)+(j-1),1);
-            % matX contains the initial coordinates of a particle
-            X = matX(nodej,:) - matX(i,:);
-            % matY contains the deformed coordinates of a particle
-            Y = matY(nodej,:) - matY(i,:);
-            %compute the influence function omega(X), here I'll simply assume:
-            omega = 1;
-            %kn = 2; omega = (1-norm(X)/ delta)^kn; % example of a quadratic function 
-            
-            % compute XX and XY by assemblage
-            for row=1:nDim
-                for column=1:nDim
-                    % XX is the shape tensor K
-                    XX(row,column) = XX(row,column) + (X(row) * X(column) * omega);
-                    YX(row,column) = YX(row,column) + (Y(row) * X(column) * omega);
-                end
+        % Compute the influence function omega(X), here I'll simply assume:
+        omega = 1;  %kn = 2; omega = (1-norm(X)/ delta)^kn; % example of a quadratic function 
+
+        % compute XX and XY by assemblage
+        for row=1:nDim
+            for column=1:nDim
+                % XX is the shape tensor K
+                XX(row,column) = XX(row,column) + (X(row) * X(column) * omega);
+                YX(row,column) = YX(row,column) + (Y(row) * X(column) * omega);
             end
-            
         end
+
+    end
+
+    if det(XX) > 1e-20 % this is to avoid singularities
+        F = YX*XX^-1; % calculate deformation gradient
         
-        % deformation gradient
-        if det(XX) > 1e-20 % this is to avoid singularities
-            F = YX*XX^-1;
-            % convert deformation gradient into small strains - Operator ' complex conjugate transpose
-            % See this webpage http://www.continuummechanics.org/smallstrain.html
-            StrainTensor(i,:,:) = 0.5 * (F + F') - I;
-        end
+        % convert deformation gradient into small strains - Operator ' complex conjugate transpose
+        % See this webpage http://www.continuummechanics.org/smallstrain.html
+        straintensor(nodei,:,:) = 0.5 * (F + F') - I;     
+    end
         
-%     end
+end
     
- %% Bond lists
+ %% Bond lists 
+ 
+ % TODO This doesn't work. Need to fix.
  
 %     % Loop all bonds 
 %     for i=1:Totalbonds
@@ -136,19 +122,6 @@ function [StrainTensor]=Strainfunc(coordinates,disp,Totalbonds,bondlist,NumFamMe
 %             StrainTensor(i,:,:) = 0.5 * (F + F') - I;
 %         end
 %     end
-
-%% Plot results 
-
-
-% Strain Plot
-% pointsize=1;
-% figure;
-% scatter3(coordinates(:,1)+(disp(:,1,1)*10),coordinates(:,2)+(disp(:,2,1)*10),coordinates(:,3)+(disp(:,3,1)*10),pointsize,StrainTensor(:,1,1))
-% title('Strain')
-% axis equal
-% colormap jet 
-% colorbar
-
     
 end
 
