@@ -1,5 +1,5 @@
 
-function [coordinates]=buildMaterialPointCoordinates()
+function [coordinates]=buildmaterialpointcoordinates()
 
 % Specification of material point coordinates for equiangular quadrilaterals (squares and rectangles)
 

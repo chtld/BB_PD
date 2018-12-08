@@ -1,5 +1,4 @@
-function [fail,disp,Stretch,ReactionForce,nodedisplacement,timesteptracker]=timeIntegration(bondlist,UndeformedLength,BondType,c,BFmultiplier,coordinates,fac,BODYFORCE,DENSITY,MATERIALFLAG,CONSTRAINTFLAG,NumFamMembVector,nodefamily,nfpointer)
-
+function [fail,disp,Stretch,ReactionForce,nodedisplacement,timesteptracker]=timeintegration(bondlist,UndeformedLength,BondType,c,BFmultiplier,coordinates,fac,BODYFORCE,DENSITY,MATERIALFLAG,CONSTRAINTFLAG,NumFamMembVector,nodefamily,nfpointer)
 % Time integration using a Forward Difference (FD) Backward Difference (BD) scheme (FD_BD)
 
 %% Constants
@@ -28,7 +27,7 @@ Xdeformed=zeros(TOTALBONDS,1);
 Ydeformed=zeros(TOTALBONDS,1);
 Zdeformed=zeros(TOTALBONDS,1);
 
-%% Main body of TimeINTergation
+%% Main body of timeintegration
 tic
 
 for tt=timesteptracker:NT
@@ -39,8 +38,8 @@ for tt=timesteptracker:NT
         
     Nforce(:,:)=0;  % Nodal force - initialise for every time step
     
-    [DeformedLength,Xdeformed,Ydeformed,Zdeformed,Stretch]=DeformedLengthfunc(TOTALBONDS,bondlist,UndeformedLength,DeformedLength,coordinates,disp,Xdeformed,Ydeformed,Zdeformed);
-    [Nforce,fail]=BondForces(Nforce,TOTALBONDS,fail,BondType,Stretch,CRITICAL_TS_CONCRETE,CRITICAL_TS_STEEL,c,VOLUME,fac,DeformedLength,Xdeformed,Ydeformed,Zdeformed,BODYFORCE,MAXBODYFORCE,bondlist,BFmultiplier);
+    [DeformedLength,Xdeformed,Ydeformed,Zdeformed,Stretch]=calculatedeformedlength(TOTALBONDS,bondlist,UndeformedLength,DeformedLength,coordinates,disp,Xdeformed,Ydeformed,Zdeformed);
+    [Nforce,fail]=calculatebondforces(Nforce,TOTALBONDS,fail,BondType,Stretch,CRITICAL_TS_CONCRETE,CRITICAL_TS_STEEL,c,VOLUME,fac,DeformedLength,Xdeformed,Ydeformed,Zdeformed,BODYFORCE,MAXBODYFORCE,bondlist,BFmultiplier);
        
     a(:,:)=(Nforce(:,:)-DAMPING*v(:,:))./DENSITY(:,:);     % Acceleration for time:-   tt
     a(CONSTRAINTFLAG==0)=0;                                % Apply constraints
@@ -51,8 +50,8 @@ for tt=timesteptracker:NT
     
     
     % Calculating the percentage of progress of time integration
-    perc_progress=(tt/NT)*100;
-    fprintf('Completed %.3f%% of time integration \n', perc_progress)
+    percProgress=(tt/NT)*100;
+    fprintf('Completed %.3f%% of time integration \n', percProgress)
     
     
     %% Save results

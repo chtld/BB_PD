@@ -1,9 +1,6 @@
+function [Displacement_node,nt]=additionaltime(Displacement_node,nt,countmin)
 % Add additional time to simulation
 % Pre-allocate more memory to vectors Displacement_node and ForceHistory
-
-function [Displacement_node,nt]=Additional_Time(Displacement_node,nt,countmin)
-
-%[Displacement_node,ForceHistory,nt]=Additional_Time(Displacement_node,ForceHistory,nt,countmin)
 
 prompt='Enter additional number of time steps required ';
 nt_plus=input(prompt)

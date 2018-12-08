@@ -1,12 +1,11 @@
-function [DT]=calculateStableTimeStep(TOTALNODES,bondlist,VOLUME,DENSITY,c)
+function [DT]=calculatestabletimestep(TOTALNODES,bondlist,VOLUME,DENSITY,c)
 % Calculate stable time step - use stability condition derived by Silling &
 % Askari (2005)
 
-
 denominatorCriticalTimeStep=zeros(TOTALNODES,1);
-TOTALBONDS=size(bondlist,1);
+nBonds=size(bondlist,1);
 
-for currentBond=1:TOTALBONDS
+for currentBond=1:nBonds
     
     nodei=bondlist(currentBond,1); % Node i
     nodej=bondlist(currentBond,2); % Node j

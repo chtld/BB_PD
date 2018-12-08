@@ -1,4 +1,4 @@
-function [nodefamily,nfpointer,NumFamMembVector,UndeformedLength,bondlist]=buildHorizons(coordinates)
+function [nodefamily,nfpointer,NumFamMembVector,UndeformedLength,bondlist]=buildhorizons(coordinates)
 % Determine the nodes inside the horizon of each material point, build bond lists, and determine undeformed length of every bond
 
 %% Constants

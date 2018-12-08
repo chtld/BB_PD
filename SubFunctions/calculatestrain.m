@@ -1,4 +1,4 @@
-function [straintensor]=calculateStrain(coordinates,disp,NumFamMembVector,nodefamily,nfpointer)
+function [straintensor]=calculatestrain(coordinates,disp,NumFamMembVector,nodefamily,nfpointer)
 %   Returns the strain tensor in each point of a given set using
 %   state based theory with correspondency strategy.
 %

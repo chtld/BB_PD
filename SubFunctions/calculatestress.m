@@ -1,9 +1,9 @@
-function [stresstensor]=calculateStress(TOTALNODES,NOD,straintensor,MATERIALFLAG)
+function [stresstensor]=calculatestress(TOTALNODES,NOD,straintensor,MATERIALFLAG)
 
 %% Load constants
 dataMaterialProperties
 
-%% Main body of calculateStress function
+%% Main body of calculatestress function
 
 stresstensor = zeros(TOTALNODES,NOD,NOD);
 

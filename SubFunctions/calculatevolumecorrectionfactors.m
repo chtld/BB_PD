@@ -1,4 +1,4 @@
-function [fac]=calculateVolumeCorrectionFactors(UndeformedLength)
+function [fac]=calculatevolumecorrectionfactors(UndeformedLength)
 % Calculate volume correction factors for every node - 3D cell volume
 
 %% Constants

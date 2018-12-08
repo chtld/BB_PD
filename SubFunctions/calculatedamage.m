@@ -1,5 +1,5 @@
 
-function [bondDamage]=calculateDamage(TOTALNODES,bondlist,fail,NumFamMembVector)
+function [bondDamage]=calculatedamage(TOTALNODES,bondlist,fail,NumFamMembVector)
 
 % calculateDamage - Calculate the damage (percentage of bonds broken) for every node
 % TODO should it be bondDamage or nodeDamage?
