@@ -1,23 +1,23 @@
-function [DeformedLength,Xdeformed,Ydeformed,Zdeformed,Stretch]=calculatedeformedlength(TOTALBONDS,bondlist,UndeformedLength,DeformedLength,coordinates,disp,Xdeformed,Ydeformed,Zdeformed)
+function [deformedLength,deformedX,deformedY,deformedZ,stretch]=calculatedeformedlength(COORDINATES,disp,nBONDS,BONDLIST,deformedX,deformedY,deformedZ,UNDEFORMEDLENGTH,deformedLength)
 
 % Calculate the deformed length of a bond using a nested for loop
-DisplacedCoordinates=coordinates+disp;
+displacedCoordinates=COORDINATES+disp;
 
-for i=1:TOTALBONDS                           
+for kBond=1:nBONDS                           
     
-   nodei=bondlist(i,1);
-   nodej=bondlist(i,2);
+   nodei=BONDLIST(kBond,1);
+   nodej=BONDLIST(kBond,2);
 
     % Length of deformed bond
-    DeformedLength(i)=(DisplacedCoordinates(nodej,1)-DisplacedCoordinates(nodei,1))^2+(DisplacedCoordinates(nodej,2)-DisplacedCoordinates(nodei,2))^2+(DisplacedCoordinates(nodej,3)-DisplacedCoordinates(nodei,3))^2;
-    Xdeformed(i)=(DisplacedCoordinates(nodej,1)-DisplacedCoordinates(nodei,1)); % X-component of deformed bond
-    Ydeformed(i)=(DisplacedCoordinates(nodej,2)-DisplacedCoordinates(nodei,2)); % Y-component of deformed bond
-    Zdeformed(i)=(DisplacedCoordinates(nodej,3)-DisplacedCoordinates(nodei,3)); % Z-component of deformed bond
+    deformedLength(kBond)=(displacedCoordinates(nodej,1)-displacedCoordinates(nodei,1))^2+(displacedCoordinates(nodej,2)-displacedCoordinates(nodei,2))^2+(displacedCoordinates(nodej,3)-displacedCoordinates(nodei,3))^2;
+    deformedX(kBond)=(displacedCoordinates(nodej,1)-displacedCoordinates(nodei,1)); % X-component of deformed bond
+    deformedY(kBond)=(displacedCoordinates(nodej,2)-displacedCoordinates(nodei,2)); % Y-component of deformed bond
+    deformedZ(kBond)=(displacedCoordinates(nodej,3)-displacedCoordinates(nodei,3)); % Z-component of deformed bond
 
 end
 
-DeformedLength=sqrt(DeformedLength);
-Stretch=(DeformedLength-UndeformedLength)./DeformedLength;
+deformedLength=sqrt(deformedLength);
+stretch=(deformedLength-UNDEFORMEDLENGTH)./deformedLength;
 
 end
 

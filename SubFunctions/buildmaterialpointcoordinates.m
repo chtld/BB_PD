@@ -1,25 +1,25 @@
 
-function [coordinates]=buildmaterialpointcoordinates()
+function [COORDINATES]=buildmaterialpointcoordinates()
 
 % Specification of material point coordinates for equiangular quadrilaterals (squares and rectangles)
 
 %% Load data
-dataGeometry
+datageometry
 
 %% Main body of function
-coordinates=zeros((NDIVX*NDIVY*NDIVZ),NOD); % Initialise coordinates array
-nnum=0;                                     % Counter
+COORDINATES=zeros((nDIVX*nDIVY*nDIVZ),NOD); % Initialise coordinates array
+counter=0;                                  % Counter
 
-for j3=1:NDIVZ
-    for j2=1:NDIVY
-        for j1=1:NDIVX
-            coordx=DX*j1;
-            coordy=DY*j2;
-            coordz=DZ*j3;
-            nnum=nnum+1;
-            coordinates(nnum,1)=coordx;
-            coordinates(nnum,2)=coordy;  
-            coordinates(nnum,3)=coordz; 
+for k3=1:nDIVZ
+    for k2=1:nDIVY
+        for k1=1:nDIVX
+            coordx=DX*k1;
+            coordy=DY*k2;
+            coordz=DZ*k3;
+            counter=counter+1;
+            COORDINATES(counter,1)=coordx;
+            COORDINATES(counter,2)=coordy;  
+            COORDINATES(counter,3)=coordz; 
          end
     end
 end

@@ -8,42 +8,44 @@ close all
 clc
 pwd; % Identify current folder
 currentFolder=pwd;
-subFolder1='/SubFunctions';
-subFolder2='/PlotFunctions';
+subFolder1='/InputData';
+subFolder2='/SubFunctions';
+subFolder3='/PlotFunctions';
 addpath(strcat(currentFolder,subFolder1));
 addpath(strcat(currentFolder,subFolder2));
+addpath(strcat(currentFolder,subFolder3));
 
 %% Start simulation timing
 startTiming=tic;
 
 %% Read in input data and specify material point coordinates
 tic
-[coordinates]=buildmaterialpointcoordinates(); 
-dataBoundaryConditions;
+[COORDINATES]=buildmaterialpointcoordinates(); 
+databoundaryconditions;
 inputdataTiming=toc;
 fprintf('Input data complete in %fs \n', inputdataTiming)
 
 %% Determine the nodes inside the horizon of each material point, build bond lists, and determine undeformed length of every bond
 tic
-[nodefamily,nfpointer,NumFamMembVector,UndeformedLength,bondlist]=buildhorizons(coordinates);
+[nFAMILYMEMBERS,NODEFAMILYPOINTERS,NODEFAMILY,BONDLIST,UNDEFORMEDLENGTH]=buildhorizons(COORDINATES);
 buildhorizonsTiming=toc;
 fprintf('Horizons complete in %fs \n', buildhorizonsTiming)
 
 %% Calculate volume correction factors
 tic
-[fac]=calculatevolumecorrectionfactors(UndeformedLength);
+[VOLUMECORRECTIONFACTORS]=calculatevolumecorrectionfactors(UNDEFORMEDLENGTH);
 calculatevolumecorrectionfactorsTiming=toc;
 fprintf('Volume correction factors complete in %fs \n', calculatevolumecorrectionfactorsTiming)
 
 %% Calculate bond type and bond stiffness (plus stiffness corrections)
 tic
-[c,BondType,BFmultiplier]=buildbonddata(bondlist,NumFamMembVector,MATERIALFLAG);
+[BONDSTIFFNESS,BONDTYPE,BFMULTIPLIER]=buildbonddata(BONDLIST,nFAMILYMEMBERS,MATERIALFLAG);
 buildbonddataTiming=toc;
 fprintf('Bond type and stiffness complete in %fs \n', buildbonddataTiming)
 
 %% Time integration
 tic
-[fail,disp,Stretch,ReactionForce,nodedisplacement,timesteptracker]=timeintegration(bondlist,UndeformedLength,BondType,c,BFmultiplier,coordinates,fac,BODYFORCE,DENSITY,MATERIALFLAG,CONSTRAINTFLAG,NumFamMembVector,nodefamily,nfpointer);
+[fail,disp,stretch,nodeDisplacement,timeStepTracker]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG);
 timeintegrationTiming=toc;
 fprintf('Time integration complete in %fs \n', timeintegrationTiming)
 
@@ -52,24 +54,21 @@ simulationTiming=toc(startTiming);
 fprintf('Simulation complete in %fs \n', simulationTiming)
 
 %% Display results
-plotdeformedmember(disp,coordinates,MATERIALFLAG);                                             % Plot deformed shape of object under analysis
-plotdisplacementtimegraph(2000,nodedisplacement);                                              % Plot displacement of selected node against time
+plotdeformedmember(disp,COORDINATES,MATERIALFLAG);                                             % Plot deformed shape of object under analysis
+plotdisplacementtimegraph(2000,nodeDisplacement);                                              % Plot displacement of selected node against time
 
-[bondDamage]=calculatedamage(TOTALNODES,bondlist,fail,NumFamMembVector);                       % Damage - Calculate percentage of broken peridynamic bonds for every node
-plotbonddamage(coordinates,disp,bondDamage,DX);
+[bondDamage]=calculatedamage(nNODES,BONDLIST,fail,nFAMILYMEMBERS);                       % Damage - Calculate percentage of broken peridynamic bonds for every node
+plotbonddamage(COORDINATES,disp,bondDamage,DX);
 
-plotstretch(TOTALNODES,Stretch,bondlist,coordinates,disp);                           % Plot stretch of every bond
-
-%ForceVsDisplacement(Displacement_node,ForceHistory);                                          % Plot applied force against time
-ReactionForceVsDisplacement(ReactionForce,Displacement_node);                                  % Plot reaction force against displacement
+plotstretch(nNODES,stretch,BONDLIST,COORDINATES,disp);                           % Plot stretch of every bond
 
 %% Stress and Strain
 
-[straintensor]=calculateStrain(coordinates,disp,NumFamMembVector,nodefamily,nfpointer);
-plotstrain(coordinates,disp,straintensor);
+[straintensor]=calculatestrain(COORDINATES,disp,nFAMILYMEMBERS,NODEFAMILY,NODEFAMILYPOINTERS);
+plotstrain(COORDINATES,disp,straintensor);
 
-[stresstensor]=calculateStress(TOTALNODES,NOD,straintensor,MATERIALFLAG);
-plotstress(coordinates,disp,stresstensor);
+[stresstensor]=calculatestress(nNODES,NOD,straintensor,MATERIALFLAG);
+plotstress(COORDINATES,disp,stresstensor);
 
 %% Output simulation data
 

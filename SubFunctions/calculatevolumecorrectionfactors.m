@@ -1,28 +1,27 @@
-function [fac]=calculatevolumecorrectionfactors(UndeformedLength)
+function [VOLUMECORRECTIONFACTORS]=calculatevolumecorrectionfactors(UNDEFORMEDLENGTH)
 % Calculate volume correction factors for every node - 3D cell volume
 
-%% Constants
-dataGeometry
+%% Load constants
+datageometry
 dataPDparameters
-TOTALBONDS=size(UndeformedLength,1);
+nBONDS=size(UNDEFORMEDLENGTH,1);
 
 %% Main body of volume correction function
 
-fac=zeros(TOTALBONDS,1);    % Initialise matrix
+VOLUMECORRECTIONFACTORS=zeros(nBONDS,1);    % Initialise array
 
-for i=1:TOTALBONDS
+for kBond=1:nBONDS
     
-    UL=UndeformedLength(i);
+    UL=UNDEFORMEDLENGTH(kBond);
     
     if (UL <= (DELTA-RADIJ))
-            fac(i)=1;
+            VOLUMECORRECTIONFACTORS(kBond)=1;
         elseif (UL > (DELTA-RADIJ)) &&  (UL <= DELTA)
-            fac(i)=(DELTA+RADIJ-UL)/(2*RADIJ);
+            VOLUMECORRECTIONFACTORS(kBond)=(DELTA+RADIJ-UL)/(2*RADIJ);
         else
-            fac(i)=0;
+            VOLUMECORRECTIONFACTORS(kBond)=0;
     end
  
 end
-
 
 end
