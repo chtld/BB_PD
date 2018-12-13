@@ -1,11 +1,11 @@
-function[]=plotbonddamage(coordinates,disp,bondDamage,DX)
+function[]=plotbonddamage(COORDINATES,disp,bondDamage,DX)
 
 DSF=10;         % Displacement scale factor
 POINT_SIZE=1;   % Size of plotted point in figure
 
 %% 3D view - Bond damage
 figure;
-scatter3(coordinates(:,1)+(disp(:,1)*DSF),coordinates(:,2)+(disp(:,2)*DSF),coordinates(:,3)+(disp(:,3)*DSF),POINT_SIZE,bondDamage(:,1))
+scatter3(COORDINATES(:,1)+(disp(:,1)*DSF),COORDINATES(:,2)+(disp(:,2)*DSF),COORDINATES(:,3)+(disp(:,3)*DSF),POINT_SIZE,bondDamage(:,1))
 axis equal
 xlabel('x')
 ylabel('y')
@@ -20,9 +20,9 @@ ylabel(h, 'Damage')
 
 %% 2D cross-section view - plot cross section of damage data
 
-crossSectionFlag=(coordinates(:,2)==DX*4)==1;   % Identify and flag nodes located in cross-section
+crossSectionFlag=(COORDINATES(:,2)==DX*4)==1;   % Identify and flag nodes located in cross-section
 
-coordCrossSection=coordinates(:,:);
+coordCrossSection=COORDINATES(:,:);
 dispCrossSection=disp(:,:);
 bondDamageCrossSection=bondDamage(:,:);
 logicCondition1 = crossSectionFlag==0;          % Delete node if it is not located in cross-section (flag==0)

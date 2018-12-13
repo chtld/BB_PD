@@ -1,65 +1,65 @@
-function [stresstensor]=calculatestress(TOTALNODES,NOD,straintensor,MATERIALFLAG)
+function [stressTensor]=calculatestress(nNODES,NOD,strainTensor,MATERIALFLAG)
 
 %% Load constants
-dataMaterialProperties
+datamaterialproperties
 
 %% Main body of calculatestress function
 
-stresstensor = zeros(TOTALNODES,NOD,NOD);
+stressTensor = zeros(nNODES,NOD,NOD);
 
 if NOD==3
     
-    for i=1:TOTALNODES
+    for i=1:nNODES
         
         if MATERIALFLAG(i,1)==0 % concrete 
-           EffectiveModulus=EFFECTIVEMODULUSCONCRETE;
+           EM=EFFECTIVEMODULUSCONCRETE;
            v=V_CONCRETE;
            G=G_CONCRETE;
         elseif MATERIALFLAG(i,1)==1 % Steel
-           EffectiveModulus=EFFECTIVEMODULUSSTEEL;
+           EM=EFFECTIVEMODULUSSTEEL;
            v=V_STEEL;
            G=G_STEEL;
         end
         
-        StressXX=EffectiveModulus*((1-v)*straintensor(i,1,1)+v*straintensor(i,2,2)+v*straintensor(i,3,3));
-        StressXY=G*straintensor(i,1,2);
-        StressXZ=G*straintensor(i,1,3);
+        stressXX=EM*((1-v)*strainTensor(i,1,1)+v*strainTensor(i,2,2)+v*strainTensor(i,3,3));
+        stressXY=G*strainTensor(i,1,2);
+        stressXZ=G*strainTensor(i,1,3);
 
-        StressYX=StressXY;
-        StressYY=EffectiveModulus*(v*straintensor(i,1,1)+(1-v)*straintensor(i,2,2)+v*straintensor(i,3,3));
-        StressYZ=G*straintensor(i,2,3);
+        stressYX=stressXY;
+        stressYY=EM*(v*strainTensor(i,1,1)+(1-v)*strainTensor(i,2,2)+v*strainTensor(i,3,3));
+        stressYZ=G*strainTensor(i,2,3);
 
-        StressZX=StressXZ;
-        StressZY=StressYZ;
-        StressZZ=EffectiveModulus*(v*straintensor(i,1,1)+v*straintensor(i,2,2)+(1-v)*straintensor(i,3,3));
+        stressZX=stressXZ;
+        stressZY=stressYZ;
+        stressZZ=EM*(v*strainTensor(i,1,1)+v*strainTensor(i,2,2)+(1-v)*strainTensor(i,3,3));
 
 
-        stresstensor(i,:,:)=[StressXX StressXY StressXZ; StressYX StressYY StressYZ; StressZX StressZY StressZZ];
+        stressTensor(i,:,:)=[stressXX stressXY stressXZ; stressYX stressYY stressYZ; stressZX stressZY stressZZ];
         
    end
     
 elseif NOD==2
     
-      for i=1:TOTALNODES
+      for i=1:nNODES
           
         if MATERIALFLAG(i,1)==0 % concrete 
-           EffectiveModulus=EffectiveModulusConcrete;
+           EM=EffectiveModulusConcrete;
            v=v_concrete;
            G=G_concrete;
         elseif MATERIALFLAG(i,1)==1 % Steel
-           EffectiveModulus=EffectiveModulusSteel;
+           EM=EffectiveModulusSteel;
            v=v_steel;
            G=G_steel;
         end
         
-        StressXX=EffectiveModulus*((1-v)*straintensor(i,1,1)+v*straintensor(i,2,2));
-        StressXY=G*straintensor(i,1,2);
+        stressXX=EM*((1-v)*strainTensor(i,1,1)+v*strainTensor(i,2,2));
+        stressXY=G*strainTensor(i,1,2);
 
-        StressYX=StressXY;
-        StressYY=EffectiveModulus*(v*straintensor(i,1,1)+(1-v)*straintensor(i,2,2));
+        stressYX=stressXY;
+        stressYY=EM*(v*strainTensor(i,1,1)+(1-v)*strainTensor(i,2,2));
 
 
-        stresstensor(i,:,:)=[StressXX StressXY; StressYX StressYY];
+        stressTensor(i,:,:)=[stressXX stressXY; stressYX stressYY];
         
       end
       

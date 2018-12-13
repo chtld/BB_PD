@@ -1,8 +1,8 @@
-function plotLoadDisplacementGraph(nodedisplacement,stresshistory)
+function plotLoadDisplacementGraph(nodeDisplacement,stressHistory)
 % Plot load-displacement graph
 
 figure;
-plot(nodedisplacement,stresshistory)
+plot(nodeDisplacement,stressHistory)
 xlabel('Displacement (m)')
 ylabel('Load (N)')
 
