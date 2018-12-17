@@ -45,7 +45,7 @@ fprintf('Bond type and stiffness complete in %fs \n', buildbonddataTiming)
 
 %% Time integration
 tic
-[fail,disp,stretch,nodeDisplacement,timeStepTracker]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG);
+[fail,disp,stretch,nodeDisplacement,timeStepTracker,equilibrium,NT]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG);
 timeintegrationTiming=toc;
 fprintf('Time integration complete in %fs \n', timeintegrationTiming)
 
@@ -54,13 +54,15 @@ simulationTiming=toc(startTiming);
 fprintf('Simulation complete in %fs \n', simulationTiming)
 
 %% Display results
-plotdeformedmember(disp,COORDINATES,MATERIALFLAG);                                             % Plot deformed shape of object under analysis
-plotdisplacementtimegraph(2000,nodeDisplacement);                                              % Plot displacement of selected node against time
+plotdeformedmember(disp,COORDINATES,MATERIALFLAG);                              % Plot deformed shape of object under analysis
+plotdisplacementtimegraph(NT,-nodeDisplacement);                                % Plot displacement of selected node against time
 
-[bondDamage]=calculatedamage(nNODES,BONDLIST,fail,nFAMILYMEMBERS);                       % Damage - Calculate percentage of broken peridynamic bonds for every node
+plotequilibriumstatetimegraph(NT,equilibrium);
+
+[bondDamage]=calculatedamage(nNODES,BONDLIST,fail,nFAMILYMEMBERS);              % Damage - Calculate percentage of broken peridynamic bonds for every node
 plotbonddamage(COORDINATES,disp,bondDamage,DX);
 
-plotstretch(nNODES,stretch,BONDLIST,COORDINATES,disp);                           % Plot stretch of every bond
+plotstretch(nNODES,stretch,BONDLIST,COORDINATES,disp);                          % Plot stretch of every bond
 
 %% Stress and Strain
 

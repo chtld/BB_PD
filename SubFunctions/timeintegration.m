@@ -1,4 +1,4 @@
-function [fail,disp,stretch,nodeDisplacement,timeStepTracker]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG)
+function [fail,disp,stretch,nodeDisplacement,timeStepTracker,equilibrium,NT]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG)
 % Time integration using a Forward Difference (FD) Backward Difference (BD) scheme (FD_BD)
 
 %% Constants
@@ -28,9 +28,11 @@ deformedZ=zeros(nBONDS,1);
 %% Main body of timeintegration
 tic
 
+equilibrium=zeros(NT,1);   
+
 for tt=timeStepTracker:NT
   
-    timeStepTracker=tt+1; % If a checkpoint file is loaded, the simulation needs to start on the next iteration(tt+1)
+    timeStepTracker=tt+1; % If a checkpoint file is loaded, the simulation needs to start on the next iteration, (tt+1)
          
     %% Calculate Bond Forces and perform time integration - Forward Difference and Backward Difference scheme
         
@@ -49,12 +51,15 @@ for tt=timeStepTracker:NT
     v(:,:)=vForward(:,:);                                      % Update
     disp(:,:)=dispForward(:,:);                                % Update    
     
+    % Calculate equilibrium state
+    [equilibrium]=calculateequilibriumstate(nodalForce,BODYFORCE,MAXBODYFORCE,equilibrium,tt);
+    
     %% Save and output results
     
     percProgress=(tt/NT)*100; fprintf('Completed %.3f%% of time integration \n', percProgress)  % Calculate and output the percentage of progress of time integration
     
     nodeDisplacement(tt,1)=disp(1500,3);          % Save displacement of defined node for plot of Displacement vs Time   
-
+   
 %     if mod(tt,2500)==0
 %        save(['D:\PhD\2 Code\BB_PD\Output\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 2500 time steps
 %     end

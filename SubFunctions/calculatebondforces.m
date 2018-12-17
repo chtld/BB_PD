@@ -6,9 +6,9 @@ bForceX=zeros(nBONDS,1);
 bForceY=zeros(nBONDS,1);
 bForceZ=zeros(nBONDS,1);
 
-fail(fail==1 & BONDTYPE==0 & stretch>CRITICAL_STRETCH_CONCRETE)=0;     % Deactivate bond if stretch exceeds critical stretch   Failed = 0 
-fail(fail==1 & BONDTYPE==1 & stretch>3*CRITICAL_STRETCH_CONCRETE)=0;   % EMU user manual recommends that the critical stretch and bond force are multiplied by a factor of 3 for concrete to steel bonds 
-fail(fail==1 & BONDTYPE==2 & stretch>CRITICAL_STRETCH_STEEL)=0;    
+fail(fail==1 & BONDTYPE==0 & stretch>CRITICAL_STRETCH_CONCRETE)=1;     % Deactivate bond if stretch exceeds critical stretch   Failed = 0 
+fail(fail==1 & BONDTYPE==1 & stretch>3*CRITICAL_STRETCH_CONCRETE)=1;   % EMU user manual recommends that the critical stretch and bond force are multiplied by a factor of 3 for concrete to steel bonds 
+fail(fail==1 & BONDTYPE==2 & stretch>CRITICAL_STRETCH_STEEL)=1;    
 % Bond remains active = 1
 
 % Calculate X,Y,Z component of bond force
