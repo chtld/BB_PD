@@ -6,6 +6,7 @@ datamaterialproperties
 datageometry
 dataPDparameters
 datasimulationparameters
+%codefunctionality
 
 nBONDS=size(BONDLIST,1);
 nNODES=size(COORDINATES,1);
@@ -63,14 +64,14 @@ for tt=timeStepTracker:NT
 %     if mod(tt,2500)==0
 %        save(['D:\PhD\2 Code\BB_PD\Output\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 2500 time steps
 %     end
-    
+
+    if percProgress==1
+        onepercent=toc;
+        fprintf('1 percent of time integration complete in %fs \n', onepercent)
+        pause
+    end
 end
 
 end
 
 %% Extra code     
-%     if perc_progress==1
-%         onepercent=toc;
-%         fprintf('1 percent of time integration complete in %fs \n', onepercent)
-%         pause
-%     end
