@@ -1,4 +1,4 @@
-# BB_PD - original branch
+# BB_PD - master branch
 Bond based peridynamic analysis code using bond lists
 
 ## Speed
