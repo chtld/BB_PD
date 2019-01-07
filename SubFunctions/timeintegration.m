@@ -1,4 +1,4 @@
-function [fail,disp,stretch,nodeDisplacement,timeStepTracker,equilibrium,NT]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG)
+function [fail,disp,stretch,nodeDisplacement,timeStepTracker,equilibriumStateAverage,NT]=timeintegration(BONDLIST,COORDINATES,UNDEFORMEDLENGTH,BONDTYPE,BFMULTIPLIER,BONDSTIFFNESS,VOLUMECORRECTIONFACTORS,BODYFORCE,DENSITY,CONSTRAINTFLAG)
 % Time integration using a Forward Difference (FD) Backward Difference (BD) scheme (FD_BD)
 
 %% Constants
@@ -25,11 +25,11 @@ nodeDisplacement=zeros(NT,1);                   % History of displacement at sel
 deformedX=zeros(nBONDS,1);
 deformedY=zeros(nBONDS,1);
 deformedZ=zeros(nBONDS,1);
+equilibriumState=zeros(NT,1);
+equilibriumStateAverage=zeros(NT,1);  
 
 %% Main body of timeintegration
 tic
-
-equilibrium=zeros(NT,1);   
 
 for tt=timeStepTracker:NT
   
@@ -53,7 +53,7 @@ for tt=timeStepTracker:NT
     disp(:,:)=dispForward(:,:);                                % Update    
     
     % Calculate equilibrium state
-    [equilibrium]=calculateequilibriumstate(nodalForce,BODYFORCE,MAXBODYFORCE,equilibrium,tt);
+    [equilibriumState,equilibriumStateAverage]=calculateequilibriumstate(nodalForce,BODYFORCE,MAXBODYFORCE,equilibriumState,equilibriumStateAverage,tt);
     
     %% Save and output results
     
@@ -65,13 +65,14 @@ for tt=timeStepTracker:NT
 %        save(['D:\PhD\2 Code\BB_PD\Output\Workspace_snapshot_',num2str(tt),'.mat']); % Save workspace to local computer every 2500 time steps
 %     end
 
-    if percProgress==1
-        onepercent=toc;
-        fprintf('1 percent of time integration complete in %fs \n', onepercent)
-        pause
-    end
+
 end
 
 end
 
 %% Extra code     
+% if percProgress==1
+%     onepercent=toc;
+%     fprintf('1 percent of time integration complete in %fs \n', onepercent)
+%     pause
+% end

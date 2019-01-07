@@ -11,7 +11,7 @@ DT=(0.8*sqrt(2*DENS_CONCRETE*DX/(pi*DELTA^2*DX*C_CONCRETE)))/SAFETYFACTOR;    % 
                                                               % Time step safety factor - to reduce time step size and ensure stable simulation
 %[DT]=calculatestabletimestep(TOTALNODES,bondlist,VOLUME,DENSITY,c);            % Minimum stable time step (this value is not always stable and a safety factor must be applied) 
 %DT=DT/SAFETYFACTOR;                                                            % Apply safety factor
-NT=10000;                                                                       % Number of time steps (10,000 for speed testing)
+NT=1000;                                                                       % Number of time steps (10,000 for speed testing)
 
 MAXBODYFORCE=-1.2e8;           % Maximum force per node
 BUILDUP=0;                     % Build load up over defined number of time steps
